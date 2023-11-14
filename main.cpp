@@ -8,9 +8,10 @@ using namespace std;
 
 int main()
 {
-    int l1 = 2;
-    int l2 = 3;
-    int l3 = 3;
+    float l1 = 2.0;
+    float l2 = 3.0;
+    float l3 = 3.0;
+    float lg = 1;
 
   //initialize the object that define for the robot
     robot_manipulator_modeling myrobot;
@@ -19,6 +20,8 @@ int main()
     myrobot.createLink(1,l1,90.0,0,0);
     myrobot.createLink(1,0,0.0,l2,0);
     myrobot.createLink(1,0,0.0,l3,0);
+    myrobot.Add_End_Effector(lg);
+
 
     //show the Links defined
     myrobot.show_Links();

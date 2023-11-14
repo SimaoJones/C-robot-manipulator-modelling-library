@@ -1,7 +1,7 @@
 #ifndef ROBOT_MANIPULATOR_MODELING_H
 #define ROBOT_MANIPULATOR_MODELING_H
-
-
+#include <iostream>
+using namespace std;
 
 /*Robotic Manipulator Kinematic Modeling Library
  Developer:Simão Franco Jones, Student of Master in Electrical and Computer engineering in the branch of Robotics, Control and Artificial Intelligence
@@ -68,12 +68,18 @@ class robot_manipulator_modeling{
 
     Link *base; // defining the base of the robot manipulator (linked list head)
     int N_Links; //defining the number of Links that the robot has
+    float lg;//distance between the last joint and end effector
+     bool end_effector; //flag for presence of end_effector;
+
+
 
  public:
     robot_manipulator_modeling(void); //defining the constructor for the robot manipulator
     ~robot_manipulator_modeling(void); //defining the destructor for the
 
     void createLink(bool revolute,float d, float alpha, float a, float offset);
+
+    void Add_End_Effector(float l);
 
     void show_Links(void) const;
 
