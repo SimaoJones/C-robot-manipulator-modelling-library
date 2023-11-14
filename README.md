@@ -3,7 +3,6 @@ This library aims to help understanding the concepts that are used to model robo
 
 
 # Example RRR planar robot
-
 planar robot
 
 ![planar robot](https://github.com/SimaoJones/Cplusplus-robot-manipulator-modelling-library/assets/94750658/5a949793-7b66-4587-aefd-04c901dc99ca)
