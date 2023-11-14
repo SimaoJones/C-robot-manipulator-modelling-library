@@ -15,3 +15,7 @@ Linked List that models the planar robot
 
 
 
+
+The Library is programmed in ``QT Creator´´
+
+
