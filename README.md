@@ -17,5 +17,23 @@ Linked List that models the planar robot
 
 
 The Library is programmed in `` QT Creator ``
+The Library consists in two classes: ``Link `` and ``robot_manipulator_modeling``
+
+The ``Link`` class defines each Linked List node that represents the link of the robot.
+The public attributes present in the ``Link class`` are:
+ bool revolute (flag that indicates if the joint is prismatic or revolute)
+ bool end_effector (flag that indicates if the Link is end effector)
+ float **T (Transformation matrix of the Link)
+
+ The ``robot_manipulator_modeling`` class is used to model our robotic manipulator
+ The private attributes are:
+ Link *base (define the base of the manipulator)
+ int N_Links(number of Links that the robot has)
+ float lg (distance between the last joint and end effector)
+ bool end_effector (flag that defines the presence of end effector)
+
+ The robot that is creating with the constructor that starts with the base and adds the Links to the robot using the public method .createLink() and adds the end-effector with the method .Add_End_Effector
+ 
+ 
 
 
