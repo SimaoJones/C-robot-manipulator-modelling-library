@@ -28,7 +28,8 @@ The public attributes present in the ``Link class`` are:
  
  bool end_effector (flag that indicates if the Link is end effector)
 
-DH foward kinematics parameters (except theta)
+```python
+# DH foward kinematics parameters (except theta)
  float d
  
  float alpha
@@ -38,11 +39,13 @@ DH foward kinematics parameters (except theta)
  float offset
  
  float **T (Transformation matrix of the Link)
+```
 
  The ``robot_manipulator_modeling`` class is used to model our robotic manipulator
  
  The private attributes are:
- 
+
+```python
  Link *base (define the base of the manipulator)
  
  int N_Links(number of Links that the robot has)
@@ -50,6 +53,7 @@ DH foward kinematics parameters (except theta)
  float lg (distance between the last joint and end effector)
  
  bool end_effector (flag that defines the presence of end effector)
+```
 
  The robot that is creating with the constructor that starts with the base and adds the Links to the robot using the public method .createLink() and adds the end-effector with the method .Add_End_Effector
  
