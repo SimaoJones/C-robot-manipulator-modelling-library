@@ -28,6 +28,7 @@ The public attributes present in the ``Link class`` are:
  
  bool end_effector (flag that indicates if the Link is end effector)
 
+DH foward kinematics parameters (except theta)
  float d
  
  float alpha
