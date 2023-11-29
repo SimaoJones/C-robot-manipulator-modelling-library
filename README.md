@@ -27,6 +27,14 @@ The public attributes present in the ``Link class`` are:
  bool revolute (flag that indicates if the joint is prismatic or revolute)
  
  bool end_effector (flag that indicates if the Link is end effector)
+
+ float d
+ 
+ float alpha
+
+ float a
+
+ float offset
  
  float **T (Transformation matrix of the Link)
 
