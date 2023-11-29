@@ -17,7 +17,7 @@ robot_manipulator_modeling::robot_manipulator_modeling(){
 }
 
 
-void robot_manipulator_modeling::createLink(bool revolute,float d, float alpha, float a, float offset){
+void robot_manipulator_modeling::createLink(bool revolute,float d, float a,float alpha, float offset){
     Link *newLink = new Link;
     Link *actual;
     newLink->next = nullptr;
@@ -25,14 +25,20 @@ void robot_manipulator_modeling::createLink(bool revolute,float d, float alpha, 
     newLink->end_effector=false;
 
 
-    float th;
+    /*float th;
 
     if(!revolute){
         th = 0;
     }else{
         //default value for theta
         th = PI/6;;
-    }
+    } */
+
+    newLink->a=a;
+    newLink->alpha=alpha;
+    newLink->offset =offset;
+    newLink->d = d;
+
 
   newLink->T = new float*[4];
   for(int i = 0; i<4; i++){
@@ -40,26 +46,12 @@ void robot_manipulator_modeling::createLink(bool revolute,float d, float alpha, 
   }
 
 
-   newLink->T[0][0] = cos(th+offset);
-   newLink->T[0][1] = -cos(alpha)*sin(th+offset);
-   newLink->T[0][2] = sin(alpha)*sin(th+offset);
-   newLink->T[0][3] = a*cos(th+offset);
+  for(int i = 0;i<4;i++){
+      for(int j = 0;j<4;j++){
+         newLink->T[i][j] =0.0;
+      }
 
-   newLink->T[1][0] = sin(th+offset);
-   newLink->T[1][1] = cos(alpha)*cos(th+offset);
-   newLink->T[1][2] = -sin(alpha)*cos(th+offset);
-   newLink->T[1][3] = a*sin(th+offset);
-
-   newLink->T[2][0] = 0.0000;
-   newLink->T[2][1] = sin(alpha);
-   newLink->T[2][2] = cos(alpha);
-   newLink->T[2][3] = d;
-
-
-   newLink->T[3][0] = 0.0000;
-   newLink->T[3][1] = 0.0000;
-   newLink->T[3][2] = 0.0000;
-   newLink->T[3][3] = 1.0000;
+  }
 
 
 
@@ -91,14 +83,14 @@ void robot_manipulator_modeling::Add_End_Effector(float l){
     newLink->end_effector=true;
 
 
-    float th,offset,alpha,d,a;
+    float th;
 
 
         th = 0;
-        a=0;
-        alpha=0;
-        offset =0;
-        d = l;
+        newLink->a=0;
+        newLink->alpha=0;
+        newLink->offset =0;
+        newLink->d = l;
 
 
 
@@ -109,20 +101,20 @@ void robot_manipulator_modeling::Add_End_Effector(float l){
   }
 
 
-   newLink->T[0][0] = cos(th+offset);
-   newLink->T[0][1] = -cos(alpha)*sin(th+offset);
-   newLink->T[0][2] = sin(alpha)*sin(th+offset);
-   newLink->T[0][3] = a*cos(th+offset);
+   newLink->T[0][0] = cos(th+newLink->offset);
+   newLink->T[0][1] = -cos(newLink->alpha)*sin(th+newLink->offset);
+   newLink->T[0][2] = sin(newLink->alpha)*sin(th+newLink->offset);
+   newLink->T[0][3] = newLink->a*cos(th+newLink->offset);
 
-   newLink->T[1][0] = sin(th+offset);
-   newLink->T[1][1] = cos(alpha)*cos(th+offset);
-   newLink->T[1][2] = -sin(alpha)*cos(th+offset);
-   newLink->T[1][3] = a*sin(th+offset);
+   newLink->T[1][0] = sin(th+newLink->offset);
+   newLink->T[1][1] = cos(newLink->alpha)*cos(th+newLink->offset);
+   newLink->T[1][2] = -sin(newLink->alpha)*cos(th+newLink->offset);
+   newLink->T[1][3] = newLink->a*sin(th+newLink->offset);
 
    newLink->T[2][0] = 0.0000;
-   newLink->T[2][1] = sin(alpha);
-   newLink->T[2][2] = cos(alpha);
-   newLink->T[2][3] = d;
+   newLink->T[2][1] = sin(newLink->alpha);
+   newLink->T[2][2] = cos(newLink->alpha);
+   newLink->T[2][3] = newLink->d;
 
 
    newLink->T[3][0] = 0.0000;
@@ -185,7 +177,7 @@ void robot_manipulator_modeling::show_Links() const{
                 cout<<"End Effector of the robot"<<endl;
             }
 
-            cout<<"Transformation matrix:  "<<endl;
+          /*  cout<<"Transformation matrix:  "<<endl;
 
             for(int i = 0; i<4;i++){
                 cout<<"[ ";
@@ -194,7 +186,7 @@ void robot_manipulator_modeling::show_Links() const{
                 }
                 cout<<" ]";
                 cout<<endl;
-            }
+            }*/
             actual = actual->next;
           n++;
         }
@@ -202,6 +194,93 @@ void robot_manipulator_modeling::show_Links() const{
 
 
 }
+
+
+
+
+//Compute the T_0_F matrix and show Transformation matrices that correspond to each link in an defined angle;
+void robot_manipulator_modeling:: Foward_kinematics(void) const{
+    int th =0;
+    Link *actual = base;
+    int n = 1;
+    float **T_0_F;
+    T_0_F = new float *[4];
+    for(int i = 0; i<4; i++){
+      T_0_F[i] = new float[4];
+    }
+
+    if(base==nullptr)
+        cout << "The robot is not defined, please use the method .createLink to create Links for the robot"<<endl;
+    else{
+        while(actual !=nullptr){
+
+            //check if the link is an end effector
+            if(actual->end_effector){
+                th = 0;
+                cout<<"End effector";
+                cout<<"\n";
+            }else if(!actual->revolute && !actual->end_effector){
+                th = 0;
+                cout <<"write the value of d to the link number "<<n<<endl;
+                cin>>actual->d;
+
+            }else{
+            cout <<"write the value of th angle to the link number "<<n<<" in degrees"<<endl;
+            cin>>th;
+            }
+            th = th*(PI/180);
+            actual->T[0][0] = cos(th+actual->offset);
+            actual->T[0][1] = -cos(actual->alpha)*sin(th+actual->offset);
+            actual->T[0][2] = sin(actual->alpha)*sin(th+actual->offset);
+            actual->T[0][3] = actual->a*cos(th+actual->offset);
+
+            actual->T[1][0] = sin(th+actual->offset);
+            actual->T[1][1] = cos(actual->alpha)*cos(th+actual->offset);
+            actual->T[1][2] = -sin(actual->alpha)*cos(th+actual->offset);
+            actual->T[1][3] = actual->a*sin(th+actual->offset);
+
+            actual->T[2][0] = 0.0000;
+            actual->T[2][1] = sin(actual->alpha);
+            actual->T[2][2] = cos(actual->alpha);
+            actual->T[2][3] = actual->d;
+
+
+            actual->T[3][0] = 0.0000;
+            actual->T[3][1] = 0.0000;
+            actual->T[3][2] = 0.0000;
+            actual->T[3][3] = 1.0000;
+
+            cout<<'\n';
+            for(int i = 0; i<4;i++){
+                cout<<"[ ";
+                for(int j = 0; j<4;j++){
+                    cout<<" "<<actual->T[i][j]<<setprecision(3);
+                }
+                cout<<" ]";
+                cout<<endl;
+            }
+
+            cout<<"\n";
+
+
+            actual = actual->next;
+            n++;
+        }
+     }
+}
+
+//Obtain the wrist coordinates
+
+/*float* robot_manipulator_modeling::Wrist_coordinates()const{
+    float wrist_coord[3];
+   //check presence of end-effector
+    if(end_effector==false){
+        cout<<"Error: The robot must have an end effector to obtain the wrist coordinates!<<endl";
+        return 0;
+    }
+
+}*/
+
 
 
 

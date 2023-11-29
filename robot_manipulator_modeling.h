@@ -55,7 +55,10 @@ class Link{
     bool revolute; //flag that defines if the i-1 joint present in the link is revolute or prismatic
     //revolute = 1 -> revolute joint
     //revolute = 0 -> prismatic joint
-
+    float d;
+    float alpha;
+    float a;
+    float offset;
     bool end_effector; //flag that indicates if the link is an end effector
     float **T; //Transformation matrix T_i-1_i that describres the Link between the joints i-1 and i
 
@@ -71,21 +74,38 @@ class robot_manipulator_modeling{
     float lg;//distance between the last joint and end effector
      bool end_effector; //flag for presence of end_effector;
 
+     //private method to multiply matrices
+     float **multiply(float **mat1,float **mat2){
+         //compute matrix multiplication
+         float **new_matrix;
+         new_matrix = new float *[4];
+         for(int i = 0; i<4; i++){
+           new_matrix[i] = new float[4];
+         }
+
+         for(int i = 0; i<4; i++){
+             for(int j = 0; j<4; j++){
+                 new_matrix[i][j] += mat1[i][j]*mat2[i][j];
+             }
+
+         }
+
+        return new_matrix;
+     }
 
 
  public:
     robot_manipulator_modeling(void); //defining the constructor for the robot manipulator
     ~robot_manipulator_modeling(void); //defining the destructor for the
 
-    void createLink(bool revolute,float d, float alpha, float a, float offset);
+    void createLink(bool revolute,float d, float a,float alpha, float offset);
 
     void Add_End_Effector(float l);
 
     void show_Links(void) const;
+  void Foward_kinematics(void) const;
 
-    void Foward_kinematics(void) const;
-
-    float Wrist_coordinates(void) const;
+    //float* Wrist_coordinates(void) const;
 
 
 

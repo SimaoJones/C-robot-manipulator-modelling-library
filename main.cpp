@@ -18,12 +18,13 @@ int main()
 
     //create three Links that correspond to three revolute joints
     myrobot.createLink(1,l1,90.0,0,0);
-    myrobot.createLink(1,0,0.0,l2,0);
+    myrobot.createLink(0,1,0.0,l2,0);
     myrobot.createLink(1,0,0.0,l3,0);
     myrobot.Add_End_Effector(lg);
 
 
     //show the Links defined
     myrobot.show_Links();
+    myrobot.Foward_kinematics();
     return 0;
 }
